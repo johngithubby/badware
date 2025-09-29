@@ -16,7 +16,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
 const { title, description, image = FallbackImage } = Astro.props;
 // Ensure asset paths respect the configured base (e.g. /badware/) using Vite's BASE_URL
-const BASE_URL = import.meta.env.BASE_URL; // trailing slash guaranteed
+let BASE_URL = import.meta.env.BASE_URL || "/";
+if (!BASE_URL.endsWith("/")) BASE_URL += "/";
 ---
 
 <!-- Global Metadata -->

@@ -48,7 +48,8 @@ All commands are run from the root of the project, from a terminal:
 | :------------------------ | :----------------------------------------------- |
 | `npm install`             | Installs dependencies                            |
 | `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run dev:clean`       | Kills any stray Astro dev processes & starts on a stable high port (default 4913) |
+| `npm run dev:clean`       | Kills any stray Astro dev processes & starts on a stable high port (default 4977) |
+| `npm run dev:solo`        | Enforces a single server on port 4977 (or DEV_PORT) and fails if busy (no port hopping) |
 | `npm run build`           | Build your production site to `./dist/`          |
 | `npm run preview`         | Preview your build locally, before deploying     |
 | `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
@@ -56,9 +57,9 @@ All commands are run from the root of the project, from a terminal:
 
 ## 👀 Want to learn more?
 
-### About `dev:clean`
+### About `dev:clean` & `dev:solo`
 
-Because this site sets a `base` (`/badware`) for GitHub Pages, the dev server sometimes left zombie processes that still held default ports (4321/4322). The `dev:clean` script force‑kills any lingering `astro dev` processes and then starts a fresh server on a low‑collision port (`4913` by default). You can override the port:
+Because this site sets a `base` (`/badware`) for GitHub Pages, the dev server sometimes left zombie processes that still held default ports (4321/4322). The `dev:clean` script force‑kills any lingering `astro dev` processes and then starts a fresh server on a low‑collision port (`4977` by default). You can override the port:
 
 ```sh
 DEV_PORT=5005 npm run dev:clean
@@ -68,6 +69,27 @@ If you prefer the classic default port again after a reboot (when nothing is bou
 
 ```sh
 DEV_PORT=4321 npm run dev:clean
+
+#### `dev:solo`
+
+If you need a guaranteed single instance (no automatic port hopping), use:
+
+```sh
+npm run dev:solo
+``
+
+It will:
+1. Kill any process currently bound to the requested port.
+2. Re-check; if the port is still busy it aborts (exit 1) instead of hopping.
+3. Start Astro with `--strictPort` so it never silently selects another port.
+
+Override the port the same way:
+
+```sh
+DEV_PORT=5005 npm run dev:solo
+```
+
+Use this when you’re actively verifying the site and want absolute certainty about which URL to load.
 ```
 
 Use this script whenever you see repeated "Port XXXX is in use" messages or the dev server silently hops ports.

@@ -2,8 +2,6 @@
 title: 'Fixing a localhost auth callback issue with the Codex VS Code extension'
 description: 'Safari blocked a localhost OAuth redirect (port 1455) for the Codex extension—here is how we diagnosed and solved it.'
 pubDate: 'Sep 28 2025'
-# Chose a different placeholder image that better contrasts with terminal-style code snippets.
-heroImage: '../../assets/blog-placeholder-1.jpg'
 ---
 
 > TL;DR: The Codex extension’s sign‑in stalled because Safari blocked the `http://localhost:1455/auth/callback` redirect. Manually following the redirect (curl with `-L`) completed the flow.
