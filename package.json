@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
+    "dev:clean": "PORT=${DEV_PORT:-4913}; echo 'Using port '$PORT; (lsof -tiTCP:$PORT -sTCP:LISTEN | xargs -r kill) 2>/dev/null; pkill -f '/node_modules/.bin/astro dev' || true; pkill -f 'astro dev' || true; sleep 0.5; ASTRO_FORCE_COLOR=1 astro dev --port $PORT",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
