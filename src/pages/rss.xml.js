@@ -8,9 +8,12 @@ export async function GET(context) {
 		title: SITE_TITLE,
 		description: SITE_DESCRIPTION,
 		site: context.site,
-		items: posts.map((post) => ({
-			...post.data,
-			link: `/blog/${post.id}/`,
-		})),
+		items: posts.map((post) => {
+			const base = import.meta.env.BASE_URL || '/';
+			return {
+				...post.data,
+				link: `${base}blog/${post.id}/`,
+			};
+		}),
 	});
 }

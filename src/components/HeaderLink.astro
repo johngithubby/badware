@@ -1,12 +1,32 @@
 ---
-import type { HTMLAttributes } from 'astro/types';
+import type { HTMLAttributes } from "astro/types";
 
-type Props = HTMLAttributes<'a'>;
+type Props = HTMLAttributes<"a">;
 
-const { href, class: className, ...props } = Astro.props;
-const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, '');
-const subpath = pathname.match(/[^\/]+/g);
-const isActive = href === pathname || href === '/' + (subpath?.[0] || '');
+const {
+	href,
+	class: className,
+	...props
+} = Astro.props as Props & { href: string };
+const base = import.meta.env.BASE_URL || "/";
+const current = Astro.url.pathname; // already includes base when configured
+
+// Build a target that definitely includes the base for comparison
+function withBase(h: string) {
+	if (!h.startsWith("/")) h = "/" + h;
+	if (base !== "/" && !h.startsWith(base)) {
+		// ensure single slash join
+		h = base.replace(/\/$/, "") + h;
+	}
+	// ensure trailing slash handling consistency for home link
+	if (h === base.replace(/\/$/, "")) h = base;
+	return h;
+}
+
+const target = withBase(href);
+const strip = (p: string) =>
+	p.endsWith("/") && p.length > 1 ? p.slice(0, -1) : p;
+const isActive = strip(current) === strip(target);
 ---
 
 <a href={href} class:list={[className, { active: isActive }]} {...props}>
